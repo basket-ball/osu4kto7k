@@ -6,15 +6,6 @@ from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QDialog, Q
 import sys
 
 
-# osu = Beatmap.from_file(f)
-# osu.circle_size = 7
-# osu.version += ' 4kto7k'
-# new_hitobjects: list[HitObject] = []
-
-# print(new_osu)
-# new_osu.write_file(open(path.join(path.dirname(path.abspath(fn)), new_osu.display_name)+'.osu', 'w', encoding='utf-8-sig'))
-
-
 class MainWin(QMainWindow, Ui_MainWindow):
     osu: Beatmap = None
     filename: str = ''
@@ -72,6 +63,7 @@ class MainWin(QMainWindow, Ui_MainWindow):
             if self.osu.circle_size != 4:
                 QMessageBox.warning(self, '警告', '不是4key文件，请重新选择')
             else:
+                self.convert_button.setEnabled(False)
                 if self._1_3.isChecked():
                     self._c_1_3(self.lockhand.isChecked())
                     self.save_file()
@@ -81,6 +73,7 @@ class MainWin(QMainWindow, Ui_MainWindow):
                 elif self._2_3.isChecked():
                     self._c_2_3(self.lockhand.isChecked())
                     self.save_file()
+                self.convert_button.setEnabled(True)
 
     def _c_1_2(self, lockhand: bool = False):
         pass
@@ -90,12 +83,20 @@ class MainWin(QMainWindow, Ui_MainWindow):
 
     def _c_1_3(self, lockhand: bool = False):
         if lockhand:
-            self.tmp_hitobjects.append(HoldNote(Position(
-                109, 192), self.osu._hit_object_times[0], 0, self.osu._hit_object_times[-1]))
-            self.tmp_hitobjects.append(HoldNote(Position(
-                402, 192), self.osu._hit_object_times[0], 0, self.osu._hit_object_times[-1]))
-            self.tmp_hitobjects.append(HoldNote(Position(
-                256, 192), self.osu._hit_object_times[0], 0, self.osu._hit_object_times[-1]))
+            if self.osu._hit_objects[-1].__class__ is HoldNote:
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    109, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].end_time))
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    402, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].end_time))
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    256, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].end_time))
+            else:
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    109, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].time))
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    402, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].time))
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    256, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].time))
         progressbar_value = 0
         for hit in self.osu._hit_objects:
             QApplication.processEvents()
