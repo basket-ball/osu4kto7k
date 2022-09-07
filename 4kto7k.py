@@ -63,6 +63,7 @@ class MainWin(QMainWindow, Ui_MainWindow):
             if self.osu.circle_size != 4:
                 QMessageBox.warning(self, '警告', '不是4key文件，请重新选择')
             else:
+                self.tmp_hitobjects = []
                 self.convert_button.setEnabled(False)
                 if self._1_3.isChecked():
                     self._c_1_3(self.lockhand.isChecked())
@@ -75,28 +76,25 @@ class MainWin(QMainWindow, Ui_MainWindow):
                     self.save_file()
                 self.convert_button.setEnabled(True)
 
-    def _c_1_2(self, lockhand: bool = False):
+    def _c_1_2(self, lockhand: bool):
         pass
 
-    def _c_2_3(self, lockhand: bool = False):
-        pass
-
-    def _c_1_3(self, lockhand: bool = False):
+    def _c_2_3(self, lockhand: bool):
         if lockhand:
             if self.osu._hit_objects[-1].__class__ is HoldNote:
                 self.tmp_hitobjects.append(HoldNote(Position(
-                    109, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].end_time))
-                self.tmp_hitobjects.append(HoldNote(Position(
-                    402, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].end_time))
+                    182, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].end_time))
                 self.tmp_hitobjects.append(HoldNote(Position(
                     256, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].end_time))
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    329, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].end_time))
             else:
                 self.tmp_hitobjects.append(HoldNote(Position(
-                    109, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].time))
-                self.tmp_hitobjects.append(HoldNote(Position(
-                    402, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].time))
+                    182, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].time))
                 self.tmp_hitobjects.append(HoldNote(Position(
                     256, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].time))
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    329, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].time))
         progressbar_value = 0
         for hit in self.osu._hit_objects:
             QApplication.processEvents()
@@ -105,36 +103,114 @@ class MainWin(QMainWindow, Ui_MainWindow):
                     self.tmp_hitobjects.append(HoldNote(Position(
                         36, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
                     if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 192 and not lockhand:
-                        print('未锁手')
                         self.tmp_hitobjects.append(HoldNote(Position(
-                            109, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                            182, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
                 elif hit.position.x == 192:
                     self.tmp_hitobjects.append(HoldNote(Position(
-                        182, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                        109, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
                     if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 320 and not lockhand:
-                        print('未锁手')
                         self.tmp_hitobjects.append(HoldNote(Position(
                             256, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
                     elif self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 64 and not lockhand:
-                        print('未锁手')
                         self.tmp_hitobjects.append(HoldNote(Position(
-                            109, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                            182, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
                 elif hit.position.x == 320:
                     self.tmp_hitobjects.append(HoldNote(Position(
-                        329, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                        402, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
                     if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 448 and not lockhand:
-                        print('未锁手')
                         self.tmp_hitobjects.append(HoldNote(Position(
-                            402, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                            329, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
                     elif self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 192 and not lockhand:
-                        print('未锁手')
                         self.tmp_hitobjects.append(HoldNote(Position(
                             256, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
                 elif hit.position.x == 448:
                     self.tmp_hitobjects.append(HoldNote(Position(
                         475, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
                     if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 320 and not lockhand:
-                        print('未锁手')
+                        self.tmp_hitobjects.append(HoldNote(Position(
+                            329, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+            elif hit.__class__ == Circle:
+                if hit.position.x == 64:
+                    self.tmp_hitobjects.append(
+                        Circle(Position(36, hit.position.y), hit.time, hit.hitsound, hit.addition))
+                    if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 192 and not lockhand:
+                        self.tmp_hitobjects.append(
+                            Circle(Position(182, hit.position.y), hit.time, hit.hitsound, hit.addition))
+                elif hit.position.x == 192:
+                    self.tmp_hitobjects.append(
+                        Circle(Position(109, hit.position.y), hit.time, hit.hitsound, hit.addition))
+                    if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 320 and not lockhand:
+                        self.tmp_hitobjects.append(
+                            Circle(Position(256, hit.position.y), hit.time, hit.hitsound, hit.addition))
+                    elif self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 64 and not lockhand:
+                        self.tmp_hitobjects.append(
+                            Circle(Position(182, hit.position.y), hit.time, hit.hitsound, hit.addition))
+                elif hit.position.x == 320:
+                    self.tmp_hitobjects.append(
+                        Circle(Position(402, hit.position.y), hit.time, hit.hitsound, hit.addition))
+                    if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 448 and not lockhand:
+                        self.tmp_hitobjects.append(
+                            Circle(Position(329, hit.position.y), hit.time, hit.hitsound, hit.addition))
+                    elif self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 192 and not lockhand:
+                        self.tmp_hitobjects.append(
+                            Circle(Position(256, hit.position.y), hit.time, hit.hitsound,  hit.addition))
+                elif hit.position.x == 448:
+                    self.tmp_hitobjects.append(
+                        Circle(Position(475, hit.position.y), hit.time, hit.hitsound,  hit.addition))
+                    if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 320 and not lockhand:
+                        self.tmp_hitobjects.append(
+                            Circle(Position(329, hit.position.y), hit.time, hit.hitsound,  hit.addition))
+            progressbar_value += 100/len(self.osu._hit_objects)
+            self.progressbar.setValue(progressbar_value)
+
+    def _c_1_3(self, lockhand: bool):
+        if lockhand:
+            if self.osu._hit_objects[-1].__class__ is HoldNote:
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    109, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].end_time))
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    256, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].end_time))
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    402, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].end_time))
+            else:
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    109, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].time))
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    256, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].time))
+                self.tmp_hitobjects.append(HoldNote(Position(
+                    402, 192), self.osu._hit_objects[0].time, 0, self.osu._hit_objects[-1].time))
+        progressbar_value = 0
+        for hit in self.osu._hit_objects:
+            QApplication.processEvents()
+            if hit.__class__ == HoldNote:
+                if hit.position.x == 64:
+                    self.tmp_hitobjects.append(HoldNote(Position(
+                        36, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                    if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 192 and not lockhand:
+                        self.tmp_hitobjects.append(HoldNote(Position(
+                            109, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                elif hit.position.x == 192:
+                    self.tmp_hitobjects.append(HoldNote(Position(
+                        182, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                    if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 320 and not lockhand:
+                        self.tmp_hitobjects.append(HoldNote(Position(
+                            256, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                    elif self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 64 and not lockhand:
+                        self.tmp_hitobjects.append(HoldNote(Position(
+                            109, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                elif hit.position.x == 320:
+                    self.tmp_hitobjects.append(HoldNote(Position(
+                        329, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                    if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 448 and not lockhand:
+                        self.tmp_hitobjects.append(HoldNote(Position(
+                            402, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                    elif self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 192 and not lockhand:
+                        self.tmp_hitobjects.append(HoldNote(Position(
+                            256, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                elif hit.position.x == 448:
+                    self.tmp_hitobjects.append(HoldNote(Position(
+                        475, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
+                    if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 320 and not lockhand:
                         self.tmp_hitobjects.append(HoldNote(Position(
                             402, hit.position.y), hit.time, hit.hitsound, hit.end_time, hit.addition))
             elif hit.__class__ == Circle:
@@ -142,18 +218,15 @@ class MainWin(QMainWindow, Ui_MainWindow):
                     self.tmp_hitobjects.append(
                         Circle(Position(36, hit.position.y), hit.time, hit.hitsound, hit.addition))
                     if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 192 and not lockhand:
-                        print('未锁手')
                         self.tmp_hitobjects.append(
                             Circle(Position(109, hit.position.y), hit.time, hit.hitsound, hit.addition))
                 elif hit.position.x == 192:
                     self.tmp_hitobjects.append(Circle(Position(
                         182, hit.position.y), hit.time, hit.hitsound, hit.addition))
                     if self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 320 and not lockhand:
-                        print('未锁手')
                         self.tmp_hitobjects.append(Circle(Position(
                             256, hit.position.y), hit.time, hit.hitsound,  hit.addition))
                     elif self.osu.closest_hitobject(hit.time).time == hit.time and self.osu.closest_hitobject(hit.time).position.x == 64 and not lockhand:
-                        print('未锁手')
                         self.tmp_hitobjects.append(
                             Circle(Position(109, hit.position.y), hit.time, hit.hitsound, hit.addition))
                 elif hit.position.x == 320:
@@ -213,7 +286,7 @@ class MainWin(QMainWindow, Ui_MainWindow):
             self.new_osu.version += ' 1_2'
         elif self._2_3.isChecked():
             self.new_osu.version += ' 2_3'
-        if self.lockhand:
+        if self.lockhand.isChecked():
             self.new_osu.version += ' lockhands'
         self.new_filename = path.join(path.dirname(
             self.filename), self.new_osu.display_name+'.osu')
